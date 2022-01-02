@@ -11,7 +11,36 @@ export default function App() {
   
   const contractABI = abi.abi;
   
-  const wave = () => {
+  const isMetaMaskDetected =  async() => {
+  
+    try {
+      // Check for the ethereum object that metamask injects into window
+      const { ethereum } = window;
+      
+      if (!ethereum){
+        console.log('✋ MetaMask not detected!\nPlease install the MetaMask extension!');
+        return;
+      }
+        
+      console.log('👍 MetaMask Detected');
+      console.log(ethereum);
+      
+      const accounts = await ethereum.request({ method: 'eth_accounts' });
+      
+      if (accounts.length !== 0){
+        console.log(`Found ${accounts.length} accounts!`);
+        const account = accounts[0];
+        console.log(`Using authorized account: ${account}`)
+        setCurrentAccount(account);
+      }else {
+        console.log('No authorized accounts found!');
+      }
+      
+    } catch (err) {
+      console.log(`Error: ${err}`);
+    }  
+  }
+  
     
   }
   
