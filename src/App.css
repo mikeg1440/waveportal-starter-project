@@ -1,8 +1,19 @@
+:root {
+  background-image: linear-gradient(to right, #8360c3, #2ebf91);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
 .mainContainer {
   display: flex;
   justify-content: center;
-  width: 100%;
-  margin-top: 64px;
+  margin: 2rem 1rem;
+  padding: 3rem;
+  background-color: rgb(47, 46, 51);
+  border-radius: 15px;
 }
 
 .dataContainer {
@@ -21,7 +32,9 @@
 .bio {
   text-align: center;
   color: gray;
-  margin-top: 16px;
+  margin: 1rem;
+  font-size: 23px;
+  
 }
 
 .waveButton {
@@ -30,5 +43,41 @@
   padding: 8px;
   border: 0;
   border-radius: 5px;
+  background-color: #2ebf91;
+  color: white;
+  font-size: 35px;
+  border: 3px solid #88eccc;
+}
+
+.waveButton:hover {
+  filter: brightness(120%);
+}
+
+.waveImage {
+  border-radius: 15px;
+  margin: 2rem 0;
+}
+
+/* Smartphones (portrait and landscape) ----------- */
+@media only screen and (max-device-width : 525px) {
+
+  :root {
+    padding: 1rem;
+  }
+
+  .mainContainer {
+    margin: 0;
+    padding: 0;
+  }
   
+  .waveImage {
+    width: 60vw;
+  }
+  
+  .dataContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+  }
 }
