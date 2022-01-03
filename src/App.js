@@ -93,7 +93,6 @@ export default function App() {
   
   return (
     <div className="mainContainer">
-
       <div className="dataContainer">
         <div className="header">Cyber Wave Portal</div>
 
@@ -111,9 +110,9 @@ export default function App() {
         <button className="waveButton" onClick={wave}>
           Wave at Me
         </button>
-        
+
         {!currentAccount && (
-          <button className='waveButton' onClick={connectWallet} >
+          <button className="waveButton" onClick={connectWallet}>
             Connect Wallet
           </button>
         )}
