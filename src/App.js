@@ -49,7 +49,7 @@ export default function App() {
         alert('Please Install MetaMask to Login!');
         return;
       }
-    
+      
       const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
       
       console.log(`Connected ${accounts[0]}`);
@@ -96,16 +96,22 @@ export default function App() {
 
       <div className="dataContainer">
         <div className="header">
-        👋 Hey there!
+          Hi World
         </div>
 
         <div className="bio">
-        I am farza and I worked on self-driving cars so that's pretty cool right? Connect your Ethereum wallet and wave at me!
+        I'm a Fullstack dev learning some Web3 stuff, Connect your Ethereum wallet and wave at me!
         </div>
 
         <button className="waveButton" onClick={wave}>
           Wave at Me
         </button>
+        
+        {!currentAccount && (
+          <button className='waveButton' onClick={connectWallet} >
+            Connect Wallet
+          </button>
+        )}
       </div>
     </div>
   );
