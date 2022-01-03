@@ -95,9 +95,11 @@ export default function App() {
     <div className="mainContainer">
 
       <div className="dataContainer">
-        <div className="header">
-          Hi World
-        </div>
+        <img
+          className='waveImage'
+          src="https://cliply.co/wp-content/uploads/2019/06/391906110_WAVING_HAND_400px.gif"
+          alt="Hand waving gif"
+        />
 
         <div className="bio">
         I'm a Fullstack dev learning some Web3 stuff, Connect your Ethereum wallet and wave at me!
