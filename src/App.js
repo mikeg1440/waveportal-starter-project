@@ -87,6 +87,10 @@ export default function App() {
     }
   }
   
+  useEffect(() => {
+    isMetaMaskDetected();
+  }, []);
+  
   return (
     <div className="mainContainer">
 
