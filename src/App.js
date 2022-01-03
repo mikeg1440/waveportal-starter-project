@@ -59,6 +59,34 @@ export default function App() {
     }
   }
   
+  const wave = async () => {
+    try {
+      const { ethereum } = window;
+      
+      if (ethereum){
+        const provider = new ethers.providers.Web3Provider(ethereum);
+        const signer = provider.getSigner();
+        const wavePortalContract = new ethers.Contract(contractAddress, contractABI, signer);
+        
+        let count = await wavePortalContract.getTotalWaves();
+        console.log(`Retrieved total wave count: ${count}`);
+        
+        const waveTxn = await wavePortalContract.wave();
+        console.log(`Mining....\nHash: ${waveTxn.hash}`);
+        
+        await waveTxn.wait();
+        console.log(`Mining Done\nHash: ${waveTxn.hash}`);
+        
+        count = await wavePortalContract.getTotalWaves();
+        console.log(`Retrieved total wave count: ${count}`);
+      }else {
+        console.log('Ethereum object doesn\'t exists');
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  
   return (
     <div className="mainContainer">
 
