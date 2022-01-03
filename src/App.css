@@ -56,13 +56,14 @@
 .waveImage {
   border-radius: 15px;
   margin: 2rem 0;
+  box-shadow: rgb(33 151 165 / 93%) 1px 0px 19px 9px;
 }
 
 /* Smartphones (portrait and landscape) ----------- */
 @media only screen and (max-device-width : 525px) {
 
   :root {
-    padding: 1rem;
+    padding: 2rem 1rem;
   }
 
   .mainContainer {
