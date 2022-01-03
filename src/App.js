@@ -104,7 +104,8 @@ export default function App() {
         />
 
         <div className="bio">
-        I'm a Fullstack dev learning some Web3 stuff, Connect your Ethereum wallet and wave at me!
+          I'm a Fullstack dev learning some Web3 stuff, Connect your Ethereum
+          wallet and wave at me through the blockchain!
         </div>
 
         <button className="waveButton" onClick={wave}>
