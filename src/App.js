@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { ethers } from 'ethers';
+import CircularProgress from "@mui/material/CircularProgress";
+import Box from "@mui/material/Box";
+
 import './App.css';
 import abi from './utils/WavePortal.json';
 
 export default function App() {
 
   const [currentAccount, setCurrentAccount] = useState('');
+  const [waveCount, setWaveCount] = useState(0);
+  const [isMining, setIsMining] = useState(false);
   
   const contractAddress = '0x52371aF3d23447c22B61dc6260aEc2780d66acC9';
   
@@ -32,6 +37,7 @@ export default function App() {
         const account = accounts[0];
         console.log(`Using authorized account: ${account}`)
         setCurrentAccount(account);
+        getTotalWaves();
       }else {
         console.log('No authorized accounts found!');
       }
@@ -59,6 +65,35 @@ export default function App() {
     }
   }
   
+  const getTotalWaves = async () => {
+    try {
+      const { ethereum } = window;
+      
+      if (!ethereum){
+        console.log('✋ Error! Ethereum object not found!');
+        return 0;
+      }
+      
+      const provider = new ethers.providers.Web3Provider(ethereum);
+      const signer = provider.getSigner();
+      const wavePortalContract = new ethers.Contract(
+        contractAddress,
+        contractABI,
+        signer
+      );
+      
+      let count = await wavePortalContract.getTotalWaves();
+      count = count.toNumber();
+      console.log(`Retrieved total wave count: ${count}`);
+      
+      setWaveCount(count);
+      return count;
+    } catch (err) {
+      console.log(`Error getting total waves: ${err}`);
+      return;
+    }
+  }
+  
   const wave = async () => {
     try {
       const { ethereum } = window;
@@ -73,12 +108,15 @@ export default function App() {
         
         const waveTxn = await wavePortalContract.wave();
         console.log(`Mining....\nHash: ${waveTxn.hash}`);
+        setIsMining(true);
         
         await waveTxn.wait();
         console.log(`Mining Done\nHash: ${waveTxn.hash}`);
+        setIsMining(false);
         
         count = await wavePortalContract.getTotalWaves();
         console.log(`Retrieved total wave count: ${count}`);
+        setWaveCount(count.toNumber());
       }else {
         console.log('Ethereum object doesn\'t exists');
       }
@@ -97,19 +135,31 @@ export default function App() {
         <div className="header">Cyber Wave Portal</div>
 
         <img
-          className='waveImage'
+          className="waveImage"
           src="https://cliply.co/wp-content/uploads/2019/06/391906110_WAVING_HAND_400px.gif"
           alt="Hand waving gif"
         />
+
+        <div className="waveCount">{waveCount} Total Waves</div>
 
         <div className="bio">
           I'm a Fullstack dev learning some Web3 stuff, Connect your Ethereum
           wallet and wave at me through the blockchain!
         </div>
 
+        {isMining && (
+          <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "space-between" }}>
+            Waiting for transaction to be mined...
+            <br />
+            <CircularProgress />
+          </Box>
+        )}
+
+        {currentAccount && !isMining && (
         <button className="waveButton" onClick={wave}>
           Wave at Me
         </button>
+        )}
 
         {!currentAccount && (
           <button className="waveButton" onClick={connectWallet}>
