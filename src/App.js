@@ -12,7 +12,8 @@ export default function App() {
   const [waveCount, setWaveCount] = useState(0);
   const [isMining, setIsMining] = useState(false);
   
-  const contractAddress = '0x52371aF3d23447c22B61dc6260aEc2780d66acC9';
+  // const contractAddress = '0x52371aF3d23447c22B61dc6260aEc2780d66acC9';
+  const contractAddress = '0x5FbDB2315678afecb367f032d93F642f64180aa3';
   
   const contractABI = abi.abi;
   
@@ -156,9 +157,9 @@ export default function App() {
         )}
 
         {currentAccount && !isMining && (
-        <button className="waveButton" onClick={wave}>
-          Wave at Me
-        </button>
+          <button className="waveButton" onClick={wave}>
+            Wave at Me
+          </button>
         )}
 
         {!currentAccount && (
