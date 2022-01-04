@@ -59,6 +59,11 @@
   box-shadow: rgb(33 151 165 / 93%) 1px 0px 19px 9px;
 }
 
+.waveCount {
+  text-align: center;
+  font-size: 24px;
+}
+
 /* Smartphones (portrait and landscape) ----------- */
 @media only screen and (max-device-width : 525px) {
 
