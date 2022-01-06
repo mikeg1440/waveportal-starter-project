@@ -11,14 +11,48 @@ export default function App() {
   const [currentAccount, setCurrentAccount] = useState('');
   const [waveCount, setWaveCount] = useState(0);
   const [isMining, setIsMining] = useState(false);
+  const [wavers, setWavers] = useState([]);
+  const [message, setMessage] = useState('');
   
   // const contractAddress = '0x52371aF3d23447c22B61dc6260aEc2780d66acC9';
-  const contractAddress = '0x5FbDB2315678afecb367f032d93F642f64180aa3';
+  // const contractAddress = '0x5FbDB2315678afecb367f032d93F642f64180aa3';
+  // const contractAddress = '0xA48EBd2f2af260BC001E084D64928C4075eA4Ed3';
+  // const contractAddress = '0xFE19539f39AcE6D822E9AF425B02F38cb9429eDB';
+  // const contractAddress = '0xa1eB51bB069C88DA2070EB1116C1e9777f68aFfa';
+  // const contractAddress = '0x3D8D5D00509D42cE01690331829b7a3D49021B5B';
+  const contractAddress = '0xcB854f3342656290cbBeCB6322A2114C2023788b';
   
   const contractABI = abi.abi;
   
-  const isMetaMaskDetected =  async() => {
+  const getAllWavers = async () => {
+    try {
+      const { ethereum } = window;
+      
+      if (ethereum){
+        const provider = new ethers.providers.Web3Provider(ethereum);
+        const signer = provider.getSigner();
+        const wavePortalContract = new ethers.Contract(contractAddress, contractABI, signer);
+        
+        const wavesData = await wavePortalContract.getWavers();
+        
+        const wavers = wavesData.map(waver => {
+          return {
+            address: waver.waver,
+            timestamp: new Date(waver.timestamp * 1000),
+            message: waver.message,
+          }
+        })
+        
+        setWavers(wavers);
+      }else {
+        console.log('Ethereum object not found!');
+      }
+    } catch (err) {
+      console.log(`Error getting wavers!\nError: ${err}`);
+    }
+  }
   
+  const isMetaMaskDetected =  async() => {
     try {
       // Check for the ethereum object that metamask injects into window
       const { ethereum } = window;
@@ -39,6 +73,7 @@ export default function App() {
         console.log(`Using authorized account: ${account}`)
         setCurrentAccount(account);
         getTotalWaves();
+        getAllWavers();
       }else {
         console.log('No authorized accounts found!');
       }
@@ -61,6 +96,8 @@ export default function App() {
       
       console.log(`Connected ${accounts[0]}`);
       setCurrentAccount(accounts[0]);
+      getTotalWaves();
+      getAllWavers();
     } catch (err) {
       console.log(`Error: ${err}`);
     }
@@ -107,22 +144,27 @@ export default function App() {
         let count = await wavePortalContract.getTotalWaves();
         console.log(`Retrieved total wave count: ${count}`);
         
-        const waveTxn = await wavePortalContract.wave();
+        const waveTxn = await wavePortalContract.wave(message, {gasLimit: 300000 });
         console.log(`Mining....\nHash: ${waveTxn.hash}`);
         setIsMining(true);
         
         await waveTxn.wait();
         console.log(`Mining Done\nHash: ${waveTxn.hash}`);
+        setMessage('');
         setIsMining(false);
         
         count = await wavePortalContract.getTotalWaves();
+        const wavers = await wavePortalContract.getWavers();
         console.log(`Retrieved total wave count: ${count}`);
         setWaveCount(count.toNumber());
+        setWavers(wavers);
       }else {
         console.log('Ethereum object doesn\'t exists');
       }
     } catch (err) {
       console.log(err);
+      setIsMining(false);
+      alert('Wave Failed!\nThere was a error while mining the transaction!')
     }
   }
   
@@ -152,21 +194,34 @@ export default function App() {
           <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "space-between" }}>
             Waiting for transaction to be mined...
             <br />
-            <CircularProgress />
+            <CircularProgress sx={{ padding: "1rem" }} />
           </Box>
         )}
 
         {currentAccount && !isMining && (
-          <button className="waveButton" onClick={wave}>
-            Wave at Me
-          </button>
+          <>
+            <input type='text' className='waveMessage' placeholder='Leave a message with your wave...' value={message} onChange={(e) => setMessage(e.target.value)} />
+            <button className="waveButton" onClick={wave}>
+              Wave at Me
+            </button>
+          </>
         )}
 
         {!currentAccount && (
           <button className="waveButton" onClick={connectWallet}>
             Connect Wallet
-          </button>
+          </button>          
         )}
+        
+      {wavers.map((wave, index) => {
+          return (
+            <div key={index} className='waveMessage'>
+              <div>Address:<span className='cyan'> {wave.address}</span></div>
+              <div>Message:<span className='orange'> {wave.message}</span></div>
+              <div className='timestamp'>{wave.timestamp.toString()}</div>
+            </div>)
+        })}
+        
       </div>
     </div>
   );
