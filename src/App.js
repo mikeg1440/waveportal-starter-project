@@ -20,7 +20,8 @@ export default function App() {
   // const contractAddress = '0xFE19539f39AcE6D822E9AF425B02F38cb9429eDB';
   // const contractAddress = '0xa1eB51bB069C88DA2070EB1116C1e9777f68aFfa';
   // const contractAddress = '0x3D8D5D00509D42cE01690331829b7a3D49021B5B';
-  const contractAddress = '0xcB854f3342656290cbBeCB6322A2114C2023788b';
+  // const contractAddress = '0xcB854f3342656290cbBeCB6322A2114C2023788b';
+  const contractAddress = '0xc20033AeEEAc59Abfb2a4a66fF9C592740916018';
   
   const contractABI = abi.abi;
   
@@ -41,7 +42,7 @@ export default function App() {
             timestamp: new Date(waver.timestamp * 1000),
             message: waver.message,
           }
-        })
+        }).reverse();
         
         setWavers(wavers);
       }else {
@@ -140,9 +141,10 @@ export default function App() {
         const provider = new ethers.providers.Web3Provider(ethereum);
         const signer = provider.getSigner();
         const wavePortalContract = new ethers.Contract(contractAddress, contractABI, signer);
-        
-        let count = await wavePortalContract.getTotalWaves();
-        console.log(`Retrieved total wave count: ${count}`);
+        debugger
+        // let count = await wavePortalContract.getTotalWaves();
+        // console.log(`Retrieved total wave count: ${count}`);
+        let count;
         
         const waveTxn = await wavePortalContract.wave(message, {gasLimit: 300000 });
         console.log(`Mining....\nHash: ${waveTxn.hash}`);
@@ -154,19 +156,49 @@ export default function App() {
         setIsMining(false);
         
         count = await wavePortalContract.getTotalWaves();
-        const wavers = await wavePortalContract.getWavers();
+        // const wavers = await wavePortalContract.getWavers();
         console.log(`Retrieved total wave count: ${count}`);
         setWaveCount(count.toNumber());
-        setWavers(wavers);
+        // setWavers(wavers);
       }else {
         console.log('Ethereum object doesn\'t exists');
       }
     } catch (err) {
       console.log(err);
+      debugger
       setIsMining(false);
-      alert('Wave Failed!\nThere was a error while mining the transaction!')
+        alert('Wave Failed!\nThere was a error while mining the transaction!')
     }
   }
+  
+  useEffect(() => {
+    let wavePortalContract;
+    
+    const onNewWave = (from, timestamp, message) => {
+      console.log(`👌 New Wave Detected\n\tFrom: ${from}\n\ttimestamp: ${timestamp}\n\tmessage: ${message}`);
+      setWavers(prevState => [
+        {
+          address: from,
+          timestamp: new Date(timestamp * 1000),
+          message: message,
+        },
+        ...prevState,
+      ]);
+    };
+    
+    if (window.ethereum){
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      
+      wavePortalContract = new ethers.Contract(contractAddress, contractABI, signer);
+      wavePortalContract.on('NewWave', onNewWave);
+    }
+    return () => {
+      if (wavePortalContract){
+        wavePortalContract.off('NewWave', onNewWave);
+      }
+    }
+  }, []);
   
   useEffect(() => {
     isMetaMaskDetected();
