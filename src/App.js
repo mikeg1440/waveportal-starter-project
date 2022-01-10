@@ -21,7 +21,10 @@ export default function App() {
   // const contractAddress = '0xa1eB51bB069C88DA2070EB1116C1e9777f68aFfa';
   // const contractAddress = '0x3D8D5D00509D42cE01690331829b7a3D49021B5B';
   // const contractAddress = '0xcB854f3342656290cbBeCB6322A2114C2023788b';
-  const contractAddress = '0xc20033AeEEAc59Abfb2a4a66fF9C592740916018';
+  // const contractAddress = '0xc20033AeEEAc59Abfb2a4a66fF9C592740916018';
+  // const contractAddress = '0x8b67A78aabCDBeA6ED85B8390396581044ab79DD';
+  // const contractAddress = '0x6611E98a0283A78525364AEd1b29371F286415eC';
+  const contractAddress = '0x13Ff7f58899Af68e3B088e077DC011690E1b4d6E';
   
   const contractABI = abi.abi;
   
@@ -41,6 +44,7 @@ export default function App() {
             address: waver.waver,
             timestamp: new Date(waver.timestamp * 1000),
             message: waver.message,
+            winner: waver.winner,
           }
         }).reverse();
         
@@ -141,7 +145,7 @@ export default function App() {
         const provider = new ethers.providers.Web3Provider(ethereum);
         const signer = provider.getSigner();
         const wavePortalContract = new ethers.Contract(contractAddress, contractABI, signer);
-        debugger
+        
         // let count = await wavePortalContract.getTotalWaves();
         // console.log(`Retrieved total wave count: ${count}`);
         let count;
@@ -165,22 +169,22 @@ export default function App() {
       }
     } catch (err) {
       console.log(err);
-      debugger
       setIsMining(false);
-        alert('Wave Failed!\nThere was a error while mining the transaction!')
+        alert('Wave Failed!\nYou are unable to wave at this time!');
     }
   }
   
   useEffect(() => {
     let wavePortalContract;
     
-    const onNewWave = (from, timestamp, message) => {
+    const onNewWave = (from, timestamp, message, winner) => {
       console.log(`👌 New Wave Detected\n\tFrom: ${from}\n\ttimestamp: ${timestamp}\n\tmessage: ${message}`);
       setWavers(prevState => [
         {
           address: from,
           timestamp: new Date(timestamp * 1000),
           message: message,
+          winner: winner,
         },
         ...prevState,
       ]);
@@ -250,6 +254,9 @@ export default function App() {
             <div key={index} className='waveMessage'>
               <div className='messageAddress'> {wave.address}</div>
               <div>Message:<span className='messageText'> {wave.message}</span></div>
+              {wave.winner && (
+                <div className='winner'>Won Ether!</div>
+              )}
               <div className='timestamp'>{wave.timestamp.toString()}</div>
             </div>)
         })}

@@ -91,14 +91,20 @@
 }
 
 .messageAddress {
-  color: #004dff;
+  color: cyan;
   text-align: center;
   width: 100%;
 }
 
 .messageText {
-  color: #ffe100;
+  color: orange;
   font-size: 21px;
+}
+
+.winner {
+  color: gold;
+  font-weight: bold;
+  text-align: center;
 }
 
 .blue {
