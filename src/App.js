@@ -248,8 +248,8 @@ export default function App() {
       {wavers.map((wave, index) => {
           return (
             <div key={index} className='waveMessage'>
-              <div>Address:<span className='cyan'> {wave.address}</span></div>
-              <div>Message:<span className='orange'> {wave.message}</span></div>
+              <div className='messageAddress'> {wave.address}</div>
+              <div>Message:<span className='messageText'> {wave.message}</span></div>
               <div className='timestamp'>{wave.timestamp.toString()}</div>
             </div>)
         })}
