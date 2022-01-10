@@ -28,7 +28,7 @@
 <br />
 <p align="center">
   <a href="https://github.com/mikeg1440/waveportal-starter-project.git">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+    <img src="src/images/waving_hand.gif" alt="Waving hand" width="200" height="200">
   </a>
 
   <h3 align="center">Cyber Wave Portal</h3>
@@ -71,16 +71,12 @@
 
 [![Demo Animation][product-screenshot]](https://github.com/mikeg1440/waveportal-starter-project.git)
 
-Here's a blank template to get started:
-**To avoid retyping too much info. Do a search and replace with your text editor for the following:**
-`github_username`, `repo`, `twitter_handle`, `email`
-
-
 ### Built With
 
-* []()
-* []()
-* []()
+* [React.js](https://reactjs.org)
+* [ethers.js](https://docs.ethers.io/v5/)
+* [Hardhat](https://hardhat.org/)
+* [MUI](https://mui.com/)
 
 
 

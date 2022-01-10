@@ -5,6 +5,7 @@ import Box from "@mui/material/Box";
 
 import './App.css';
 import abi from './utils/WavePortal.json';
+import WavingHand from './images/waving_hand.gif';
 
 export default function App() {
 
@@ -215,7 +216,7 @@ export default function App() {
 
         <img
           className="waveImage"
-          src="https://cliply.co/wp-content/uploads/2019/06/391906110_WAVING_HAND_400px.gif"
+          src={WavingHand}
           alt="Hand waving gif"
         />
 
